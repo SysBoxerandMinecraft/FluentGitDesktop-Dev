@@ -222,4 +222,9 @@
   <data name="FileCopyName.Text" xml:space="preserve"><value>複製名稱</value></data>
   <data name="FileRefreshTree.Text" xml:space="preserve"><value>重新整理目錄樹</value></data>
   <data name="FileRepoRoot" xml:space="preserve"><value>{0}（儲存庫）</value></data>
+    <!-- 衝突處理 -->
+  <data name="ConflictTitle" xml:space="preserve"><value>偵測到程式碼衝突</value></data>
+  <data name="ConflictDesc" xml:space="preserve"><value>拉取或合併失敗，以下檔案存在衝突。請在編輯器中解決衝突並儲存，然後在此頁面點擊「全部暫存」並提交以完成合併。</value></data>
+  <data name="ConflictOpenFolder" xml:space="preserve"><value>開啟儲存庫目錄</value></data>
+  <data name="ConflictOK" xml:space="preserve"><value>我知道了</value></data>
 </root>

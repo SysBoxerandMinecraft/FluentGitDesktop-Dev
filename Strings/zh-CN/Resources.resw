@@ -222,4 +222,9 @@
   <data name="FileCopyName.Text" xml:space="preserve"><value>复制名称</value></data>
   <data name="FileRefreshTree.Text" xml:space="preserve"><value>刷新目录树</value></data>
   <data name="FileRepoRoot" xml:space="preserve"><value>{0}（仓库）</value></data>
+    <!-- 冲突处理 -->
+  <data name="ConflictTitle" xml:space="preserve"><value>检测到代码冲突</value></data>
+  <data name="ConflictDesc" xml:space="preserve"><value>拉取或合并失败，以下文件存在冲突。请在编辑器中解决冲突并保存，然后在此页面点击“全部暂存”并提交以完成合并。</value></data>
+  <data name="ConflictOpenFolder" xml:space="preserve"><value>打开仓库目录</value></data>
+  <data name="ConflictOK" xml:space="preserve"><value>我知道了</value></data>
 </root>

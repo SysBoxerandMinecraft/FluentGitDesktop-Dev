@@ -17,15 +17,11 @@ public static partial class GitService
 
             if (result.ExitCode == 0)
             {
-                string msg = string.IsNullOrWhiteSpace(result.Output)
-                    ? "拉取成功"
-                    : result.Output.Trim();
+                string msg = string.IsNullOrWhiteSpace(result.Output) ? "拉取成功" : result.Output.Trim();
                 return (true, msg);
             }
 
-            string err = string.IsNullOrWhiteSpace(result.Error)
-                ? "拉取失败，请检查远程配置或网络"
-                : result.Error.Trim();
+            string err = string.IsNullOrWhiteSpace(result.Error) ? "拉取失败，请检查远程配置或网络" : result.Error.Trim();
             return (false, err);
         }
         catch (Exception ex)
@@ -43,15 +39,11 @@ public static partial class GitService
 
             if (result.ExitCode == 0)
             {
-                string msg = string.IsNullOrWhiteSpace(result.Output)
-                    ? "获取远程信息成功"
-                    : result.Output.Trim();
+                string msg = string.IsNullOrWhiteSpace(result.Output) ? "获取远程信息成功" : result.Output.Trim();
                 return (true, msg);
             }
 
-            string err = string.IsNullOrWhiteSpace(result.Error)
-                ? "获取远程信息失败"
-                : result.Error.Trim();
+            string err = string.IsNullOrWhiteSpace(result.Error) ? "获取远程信息失败" : result.Error.Trim();
             return (false, err);
         }
         catch (Exception ex)
@@ -76,15 +68,11 @@ public static partial class GitService
 
             if (result.ExitCode == 0)
             {
-                string msg = string.IsNullOrWhiteSpace(result.Output)
-                    ? "推送成功"
-                    : result.Output.Trim();
+                string msg = string.IsNullOrWhiteSpace(result.Output) ? "推送成功" : result.Output.Trim();
                 return (true, msg);
             }
 
-            string err = string.IsNullOrWhiteSpace(result.Error)
-                ? "推送失败，请检查远程配置或网络"
-                : result.Error.Trim();
+            string err = string.IsNullOrWhiteSpace(result.Error) ? "推送失败，请检查远程配置或网络" : result.Error.Trim();
             return (false, err);
         }
         catch (Exception ex)
@@ -167,7 +155,7 @@ public static partial class GitService
     public static async Task<int> GetRemoteCommitCountAsync(string remoteUrl, string? branch = null)
     {
         string? repoPath = ExtractGitHubRepoPath(remoteUrl);
-        if (string.IsNullOrEmpty(repoPath)) return -1;   // 非 GitHub，未知
+        if (string.IsNullOrEmpty(repoPath)) return -1;
 
         try
         {
@@ -186,20 +174,16 @@ public static partial class GitService
                 return -1;
             }
 
-            // Link header: <https://api.github.com/...?page=42>; rel="last"
             if (resp.Headers.TryGetValues("Link", out var links))
             {
                 string link = links.FirstOrDefault() ?? "";
                 var m = Regex.Match(link, @"[?&]page=(\d+)>;\s*rel=""last""");
                 if (m.Success && int.TryParse(m.Groups[1].Value, out int total))
                 {
-                    AppLogger.OK(TAG, $"远程提交数: {total} ({repoPath})");
                     return total;
                 }
             }
 
-            // 没有 Link header = 只有一页 = 1 个提交
-            AppLogger.OK(TAG, $"远程提交数: 1 ({repoPath})");
             return 1;
         }
         catch (Exception ex)
@@ -209,7 +193,6 @@ public static partial class GitService
         }
     }
 
-    // ========== 从远程 URL 提取 GitHub 的 owner/repo ==========
     private static string? ExtractGitHubRepoPath(string remoteUrl)
     {
         if (string.IsNullOrEmpty(remoteUrl)) return null;
@@ -218,14 +201,37 @@ public static partial class GitService
         if (remoteUrl.EndsWith(".git", StringComparison.OrdinalIgnoreCase))
             remoteUrl = remoteUrl[..^4];
 
-        // 支持：https://github.com/owner/repo  git@github.com:owner/repo
-        var m = Regex.Match(
-            remoteUrl, @"github\.com[/:]([^/]+)/([^/]+)$",
-            RegexOptions.IgnoreCase);
+        var m = Regex.Match(remoteUrl, @"github\.com[/:]([^/]+)/([^/]+)$", RegexOptions.IgnoreCase);
 
         if (m.Success)
             return $"{m.Groups[1].Value}/{m.Groups[2].Value}";
 
         return null;
+    }
+
+    // ========== 获取当前发生冲突的文件 ==========
+    public static List<string> GetConflictedFiles(string gitExePath, string repoPath)
+    {
+        var result = new List<string>();
+        try
+        {
+            // --diff-filter=U 意思是只显示 Unmerged（未合并/冲突）的文件
+            var (code, output, _) = RunGit(
+                gitExePath, 
+                new[] { "diff", "--name-only", "--diff-filter=U" }, 
+                repoPath);
+
+            if (code == 0 && !string.IsNullOrWhiteSpace(output))
+            {
+                result = output.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                               .Select(f => f.Trim())
+                               .ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            AppLogger.Error(TAG, $"GetConflictedFiles 异常: {ex.Message}");
+        }
+        return result;
     }
 }

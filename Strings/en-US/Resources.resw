@@ -223,4 +223,9 @@
   <data name="FileCopyName.Text" xml:space="preserve"><value>Copy Name</value></data>
   <data name="FileRefreshTree.Text" xml:space="preserve"><value>Refresh Directory Tree</value></data>
   <data name="FileRepoRoot" xml:space="preserve"><value>{0} (Repository)</value></data>
+    <!-- Conflict Handling -->
+  <data name="ConflictTitle" xml:space="preserve"><value>Code Conflicts Detected</value></data>
+  <data name="ConflictDesc" xml:space="preserve"><value>Pull or merge failed. The following files have conflicts. Please resolve them in your editor, save, then click 'Stage All' and commit to complete the merge.</value></data>
+  <data name="ConflictOpenFolder" xml:space="preserve"><value>Open Repository Folder</value></data>
+  <data name="ConflictOK" xml:space="preserve"><value>Got it</value></data>
 </root>

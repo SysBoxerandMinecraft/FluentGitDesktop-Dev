@@ -33,6 +33,7 @@ project.lock.json
 AppPackages/
 BundleArtifacts/
 *.pfx
+*.cer
 *.msix
 *.msixupload
 *.appx

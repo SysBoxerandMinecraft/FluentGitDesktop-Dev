@@ -1,8 +1,11 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentGit.Services;
 
 namespace FluentGit.Views;
@@ -138,6 +141,64 @@ public sealed partial class RepoPage : Page
         catch (Exception ex)
         {
             AppLogger.Error(TAG, $"浏览目录异常: {ex.Message}");
+        }
+    }
+
+    // ========== 冲突提示对话框 ==========
+    private async Task ShowConflictDialogAsync(string repoPath, List<string> conflicts)
+    {
+        var panel = new StackPanel { Spacing = 12 };
+        
+        // 1. 说明文本
+        panel.Children.Add(new TextBlock 
+        { 
+            Text = Loc.GetString("ConflictDesc"), 
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
+        });
+
+        // 2. 冲突文件列表 (用带边框的 ListView 展示)
+        var listView = new ListView
+        {
+            ItemsSource = conflicts,
+            MaxHeight = 200,
+            SelectionMode = ListViewSelectionMode.None,
+            BorderThickness = new Thickness(1),
+            BorderBrush = (Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"],
+            CornerRadius = new CornerRadius(4),
+            Padding = new Thickness(4)
+        };
+        panel.Children.Add(listView);
+
+        // 3. 构造对话框
+        var dialog = new ContentDialog
+        {
+            Title = Loc.GetString("ConflictTitle"),
+            Content = new ScrollViewer { Content = panel },
+            PrimaryButtonText = Loc.GetString("ConflictOpenFolder"),
+            CloseButtonText = Loc.GetString("ConflictOK"),
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = this.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+
+        // 4. 如果用户点击了“打开仓库目录”
+        if (result == ContentDialogResult.Primary)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = $"\"{repoPath}\"",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(TAG, $"打开文件夹失败: {ex.Message}");
+            }
         }
     }
 }
