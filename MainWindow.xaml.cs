@@ -1,11 +1,10 @@
-// Copyright (c) 2026 SysBoxerandMinecraft. Licensed under the MIT License.
 using FluentGit.Services;
 using FluentGit.Views;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media; // 【补上了这个关键命名空间】
 using Microsoft.UI.Xaml.Media.Animation;
 using System;
 using System.IO;
@@ -18,36 +17,11 @@ namespace FluentGit;
 public sealed partial class MainWindow : Window
 {
     private const string TAG = "MainWindow";
-
-    // 全局 InfoBar 的取消令牌，用于连续提示时打断上一个
     private CancellationTokenSource? _globalInfoBarCts;
     private bool _isGlobalInfoBarAnimating = false;
 
     public MainWindow()
     {
-        /*
-        *                       _ooOoo_
-        *                      o8888888o
-        *                      88" . "88
-        *                      (| -_- |)
-        *                      O\  =  /O
-        *                   ____/`---'\____
-        *                 .'  \\|     |//  `.
-        *                /  \\|||  :  |||//  \
-        *               /  _||||| -:- |||||-  \
-        *               |   | \\\  -  /// |   |
-        *               | \_|  ''\---/''  |   |
-        *               \  .-\__  `-`  ___/-. /
-        *             ___`. .'  /--.--\  `. . __
-        *          ."" '<  `.___\_<|>_/___.'  >'"".
-        *         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-        *         \  \ `-.   \_ __\ /__ _/   .-` /  /
-        *    ======`-.____`-.___\_____/___.-`____.-'======
-        *                       `=---='
-        *   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        *             佛祖保佑            永无BUG
-         */
-
         InitializeComponent();
         InitializeBackdrop();
 
@@ -62,16 +36,11 @@ public sealed partial class MainWindow : Window
         ApplyThemeFromSettings();
 
         NavFrame.Navigated += OnNavFrameNavigated;
-
         NavFrame.Navigate(typeof(RepoPage));
     }
 
-    // ============================================================
-    //  全局 InfoBar 接口
-    // ============================================================
     public async void ShowInfoBar(string title, string message, InfoBarSeverity severity)
     {
-        // 打断上一个
         if (_isGlobalInfoBarAnimating)
         {
             _globalInfoBarCts?.Cancel();
@@ -115,9 +84,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    // ============================================================
-    //  导航事件
-    // ============================================================
     private void OnNavFrameNavigated(object sender, Microsoft.UI.Xaml.Navigation.NavigationEventArgs args)
     {
         AppTitleBar.IsBackButtonVisible = NavFrame.CanGoBack;
@@ -128,6 +94,7 @@ public sealed partial class MainWindow : Window
             var t when t == typeof(FilePage)     => "file",
             var t when t == typeof(HistoryPage)  => "history",
             var t when t == typeof(ClonePage)    => "clone",
+            var t when t == typeof(AboutPage)    => "about",
             var t when t == typeof(SettingsPage) => "settings",
             _ => null
         };
@@ -163,9 +130,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    // ============================================================
-    //  Backdrop
-    // ============================================================
     private void InitializeBackdrop()
     {
         var settings = SettingsService.Load();
@@ -179,36 +143,24 @@ public sealed partial class MainWindow : Window
             switch (backdropType)
             {
                 case "Mica":
-                    SystemBackdrop = MicaController.IsSupported()
-                        ? new MicaBackdrop { Kind = MicaKind.Base }
-                        : null;
+                    SystemBackdrop = MicaController.IsSupported() ? new MicaBackdrop { Kind = MicaKind.Base } : null;
                     AppLogger.OK(TAG, $"Backdrop: Mica (supported={MicaController.IsSupported()})");
                     break;
-
                 case "MicaAlt":
-                    SystemBackdrop = MicaController.IsSupported()
-                        ? new MicaBackdrop { Kind = MicaKind.BaseAlt }
-                        : null;
+                    SystemBackdrop = MicaController.IsSupported() ? new MicaBackdrop { Kind = MicaKind.BaseAlt } : null;
                     AppLogger.OK(TAG, $"Backdrop: MicaAlt (supported={MicaController.IsSupported()})");
                     break;
-
                 case "Acrylic":
-                    SystemBackdrop = DesktopAcrylicController.IsSupported()
-                        ? new DesktopAcrylicBackdrop()
-                        : null;
+                    SystemBackdrop = DesktopAcrylicController.IsSupported() ? new DesktopAcrylicBackdrop() : null;
                     AppLogger.OK(TAG, $"Backdrop: Acrylic (supported={DesktopAcrylicController.IsSupported()})");
                     break;
-
                 case "None":
                     SystemBackdrop = null;
                     AppLogger.OK(TAG, "Backdrop: None (solid color)");
                     break;
-
                 case "Default":
                 default:
-                    SystemBackdrop = MicaController.IsSupported()
-                        ? new MicaBackdrop()
-                        : null;
+                    SystemBackdrop = MicaController.IsSupported() ? new MicaBackdrop() : null;
                     AppLogger.OK(TAG, $"Backdrop: Default (Mica={MicaController.IsSupported()})");
                     break;
             }
@@ -220,9 +172,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    // ============================================================
-    //  主题
-    // ============================================================
     private void ApplyThemeFromSettings()
     {
         try
@@ -246,9 +195,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    // ============================================================
-    //  标题栏事件
-    // ============================================================
     private void TitleBar_PaneToggleRequested(TitleBar sender, object args)
     {
         NavView.IsPaneOpen = !NavView.IsPaneOpen;
@@ -260,9 +206,6 @@ public sealed partial class MainWindow : Window
             NavFrame.GoBack();
     }
 
-    // ============================================================
-    //  导航
-    // ============================================================
     private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.SelectedItem is NavigationViewItem item)
@@ -281,6 +224,9 @@ public sealed partial class MainWindow : Window
                 case "clone":
                     NavFrame.Navigate(typeof(ClonePage));
                     break;
+                case "about":
+                    NavFrame.Navigate(typeof(AboutPage));
+                    break;
                 case "settings":
                     NavFrame.Navigate(typeof(SettingsPage));
                     break;
@@ -291,9 +237,6 @@ public sealed partial class MainWindow : Window
         }
     }
 
-    // ============================================================
-    //  设置齿轮旋转
-    // ============================================================
     private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
     {
         if (args.InvokedItemContainer is NavigationViewItem item &&

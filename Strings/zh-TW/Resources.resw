@@ -235,4 +235,22 @@
   <data name="RepoDiscardConfirmDesc" xml:space="preserve"><value>這將永久捨棄 {0} 中未暫存的修改，此操作無法復原。</value></data>
   <data name="RepoDiscardBtnYes" xml:space="preserve"><value>放棄修改</value></data>
   <data name="RepoDiscardBtnNo" xml:space="preserve"><value>取消</value></data>
+    <data name="NavAbout.Content" xml:space="preserve"><value>關於</value></data>
+  <data name="AboutTitle.Text" xml:space="preserve"><value>關於</value></data>
+  <data name="AboutVersionHeader.Text" xml:space="preserve"><value>目前版本</value></data>
+  <data name="AboutLicenseHeader.Text" xml:space="preserve"><value>開源協議</value></data>
+  <data name="AboutLicenseDesc.Text" xml:space="preserve"><value>基於 MIT 協議</value></data>
+  <data name="AboutUpdateStatus.Text" xml:space="preserve"><value>你正在使用 Alpha 版本</value></data>
+  <data name="AboutQuickStart.Text" xml:space="preserve"><value>快速連結</value></data>
+  <data name="AboutRepo.Text" xml:space="preserve"><value>GitHub 儲存庫</value></data>
+  <data name="AboutIssue.Text" xml:space="preserve"><value>提交 Issue 回饋</value></data>
+  <data name="AboutContributors.Text" xml:space="preserve"><value>致謝開源專案</value></data>
+  <!-- 新增的更新提示 -->
+  <data name="AboutCheckUpdate.Content" xml:space="preserve"><value>檢查更新</value></data>
+  <data name="AboutChecking.Text" xml:space="preserve"><value>檢查中...</value></data>
+  <data name="AboutNewVersionTitle" xml:space="preserve"><value>發現新版本</value></data>
+  <data name="AboutNewVersionMsg" xml:space="preserve"><value>最新版本：{0}\n目前版本：{1}\n\n是否前往 GitHub 下載？</value></data>
+  <data name="AboutGoToDownload.Content" xml:space="preserve"><value>前往下載</value></data>
+  <data name="AboutLatest.Text" xml:space="preserve"><value>你使用的是最新版本</value></data>
+  <data name="AboutUpdateFailed.Text" xml:space="preserve"><value>檢查更新失敗，請檢查網路</value></data>
 </root>

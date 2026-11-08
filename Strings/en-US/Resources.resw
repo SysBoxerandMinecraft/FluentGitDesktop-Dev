@@ -236,4 +236,22 @@
   <data name="RepoDiscardConfirmDesc" xml:space="preserve"><value>This will permanently discard unstaged changes in {0}. This action cannot be undone.</value></data>
   <data name="RepoDiscardBtnYes" xml:space="preserve"><value>Discard</value></data>
   <data name="RepoDiscardBtnNo" xml:space="preserve"><value>Cancel</value></data>
+    <data name="NavAbout.Content" xml:space="preserve"><value>About</value></data>
+  <data name="AboutTitle.Text" xml:space="preserve"><value>About</value></data>
+  <data name="AboutVersionHeader.Text" xml:space="preserve"><value>Current Version</value></data>
+  <data name="AboutLicenseHeader.Text" xml:space="preserve"><value>License</value></data>
+  <data name="AboutLicenseDesc.Text" xml:space="preserve"><value>Under MIT License</value></data>
+  <data name="AboutUpdateStatus.Text" xml:space="preserve"><value>You are using an Alpha version</value></data>
+  <data name="AboutQuickStart.Text" xml:space="preserve"><value>Quick Links</value></data>
+  <data name="AboutRepo.Text" xml:space="preserve"><value>GitHub Repository</value></data>
+  <data name="AboutIssue.Text" xml:space="preserve"><value>Submit an Issue</value></data>
+  <data name="AboutContributors.Text" xml:space="preserve"><value>Open Source Acknowledgements</value></data>
+  <!-- 新增的更新提示 -->
+  <data name="AboutCheckUpdate.Content" xml:space="preserve"><value>Check for Updates</value></data>
+  <data name="AboutChecking.Text" xml:space="preserve"><value>Checking...</value></data>
+  <data name="AboutNewVersionTitle" xml:space="preserve"><value>New Version Found</value></data>
+  <data name="AboutNewVersionMsg" xml:space="preserve"><value>Latest Version: {0}\nCurrent Version: {1}\n\nGo to GitHub to download?</value></data>
+  <data name="AboutGoToDownload.Content" xml:space="preserve"><value>Download</value></data>
+  <data name="AboutLatest.Text" xml:space="preserve"><value>You are on the latest version</value></data>
+  <data name="AboutUpdateFailed.Text" xml:space="preserve"><value>Failed to check updates. Please check your network.</value></data>
 </root>

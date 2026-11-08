@@ -6,45 +6,26 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:FluentGit"
-    xmlns:l="using:WinUI3Localizer"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Grid>
         <Grid.Resources>
-            <!-- 全局 InfoBar：滑入 -->
             <Storyboard x:Name="GlobalInfoBarSlideIn">
-                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarTransform"
-                                 Storyboard.TargetProperty="Y"
-                                 From="-80" To="0" Duration="0:0:0.3">
-                    <DoubleAnimation.EasingFunction>
-                        <CubicEase EasingMode="EaseOut"/>
-                    </DoubleAnimation.EasingFunction>
+                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarTransform" Storyboard.TargetProperty="Y" From="-80" To="0" Duration="0:0:0.3">
+                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
-                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarContainer"
-                                 Storyboard.TargetProperty="Opacity"
-                                 From="0" To="1" Duration="0:0:0.3">
-                    <DoubleAnimation.EasingFunction>
-                        <CubicEase EasingMode="EaseOut"/>
-                    </DoubleAnimation.EasingFunction>
+                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarContainer" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.3">
+                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
 
-            <!-- 全局 InfoBar：滑出 -->
             <Storyboard x:Name="GlobalInfoBarSlideOut">
-                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarTransform"
-                                 Storyboard.TargetProperty="Y"
-                                 From="0" To="-80" Duration="0:0:0.2">
-                    <DoubleAnimation.EasingFunction>
-                        <CubicEase EasingMode="EaseIn"/>
-                    </DoubleAnimation.EasingFunction>
+                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarTransform" Storyboard.TargetProperty="Y" From="0" To="-80" Duration="0:0:0.2">
+                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseIn"/></DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
-                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarContainer"
-                                 Storyboard.TargetProperty="Opacity"
-                                 From="1" To="0" Duration="0:0:0.2">
-                    <DoubleAnimation.EasingFunction>
-                        <CubicEase EasingMode="EaseIn"/>
-                    </DoubleAnimation.EasingFunction>
+                <DoubleAnimation Storyboard.TargetName="GlobalInfoBarContainer" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.2">
+                    <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseIn"/></DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
             </Storyboard>
         </Grid.Resources>
@@ -56,7 +37,7 @@
 
         <TitleBar
             x:Name="AppTitleBar"
-            l:Uids.Uid="AppTitle"
+            x:Uid="AppTitle"
             BackRequested="TitleBar_BackRequested"
             IsBackButtonVisible="False"
             IsPaneToggleButtonVisible="True"
@@ -76,37 +57,39 @@
             SelectionChanged="NavView_SelectionChanged"
             ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
-                <NavigationViewItem l:Uids.Uid="NavRepo" Tag="repo" IsSelected="True">
+                <NavigationViewItem x:Uid="NavRepo" Tag="repo" IsSelected="True">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE943;"
-                                  FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
+                        <FontIcon Glyph="&#xE943;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem l:Uids.Uid="NavFile" Tag="file">
+                <NavigationViewItem x:Uid="NavFile" Tag="file">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8B7;"
-                                  FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
+                        <FontIcon Glyph="&#xE8B7;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem l:Uids.Uid="NavHistory" Tag="history">
+                <NavigationViewItem x:Uid="NavHistory" Tag="history">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE81C;"
-                                  FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
+                        <FontIcon Glyph="&#xE81C;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem l:Uids.Uid="NavClone" Tag="clone">
+                <NavigationViewItem x:Uid="NavClone" Tag="clone">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8C8;"
-                                  FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
+                        <FontIcon Glyph="&#xE8C8;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>
+            
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem l:Uids.Uid="NavSettings" Tag="settings">
+                <!-- 新增：关于 -->
+                <NavigationViewItem x:Uid="NavAbout" Tag="about">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE713;"
-                                  FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets"
-                                  RenderTransformOrigin="0.5,0.5">
+                        <FontIcon Glyph="&#xE946;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Uid="NavSettings" Tag="settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" FontFamily="Segoe Fluent Icons,Segoe MDL2 Assets" RenderTransformOrigin="0.5,0.5">
                             <FontIcon.RenderTransform>
                                 <RotateTransform x:Name="SettingsIconRotation" Angle="0" />
                             </FontIcon.RenderTransform>
@@ -114,31 +97,19 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.FooterMenuItems>
+            
             <NavigationView.Content>
                 <Frame x:Name="NavFrame" />
             </NavigationView.Content>
         </NavigationView>
 
-        <!-- 全局 InfoBar 浮层（盖在所有内容之上） -->
-        <Border x:Name="GlobalInfoBarContainer"
-                Grid.RowSpan="2"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Center"
-                Margin="0,60,0,0"
-                MinWidth="400"
-                MaxWidth="600"
-                Opacity="0"
-                Visibility="Collapsed"
-                IsHitTestVisible="False">
+        <!-- 全局 InfoBar -->
+        <Border x:Name="GlobalInfoBarContainer" Grid.RowSpan="2" VerticalAlignment="Top" HorizontalAlignment="Center"
+                Margin="0,60,0,0" MinWidth="400" MaxWidth="600" Opacity="0" Visibility="Collapsed" IsHitTestVisible="False">
             <Border.RenderTransform>
                 <TranslateTransform x:Name="GlobalInfoBarTransform" Y="-80" />
             </Border.RenderTransform>
-            <InfoBar x:Name="GlobalInfoBar"
-                     IsOpen="True"
-                     IsClosable="False"
-                     Severity="Informational"
-                     Title=""
-                     Message="" />
+            <InfoBar x:Name="GlobalInfoBar" IsOpen="True" IsClosable="False" Severity="Informational" Title="" Message="" />
         </Border>
     </Grid>
 </Window>

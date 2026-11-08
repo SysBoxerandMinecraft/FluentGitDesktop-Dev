@@ -11,6 +11,11 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <AppxDefaultResourceQualifiers>Language=zh-CN;en-US;zh-TW</AppxDefaultResourceQualifiers>
 
+    <!-- 新增：统一定义程序集版本号，供关于页读取 -->
+    <Version>0.0.1</Version>
+    <AssemblyVersion>0.0.1.0</AssemblyVersion>
+    <FileVersion>0.0.1.0</FileVersion>
+
     <!-- 只保留 x64 和 ARM64 -->
     <Platforms>x64;ARM64</Platforms>
 
