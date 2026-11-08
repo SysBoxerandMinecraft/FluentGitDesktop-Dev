@@ -227,4 +227,6 @@
   <data name="ConflictDesc" xml:space="preserve"><value>拉取或合并失败，以下文件存在冲突。请在编辑器中解决冲突并保存，然后在此页面点击“全部暂存”并提交以完成合并。</value></data>
   <data name="ConflictOpenFolder" xml:space="preserve"><value>打开仓库目录</value></data>
   <data name="ConflictOK" xml:space="preserve"><value>我知道了</value></data>
+    <data name="RepoRecentTitle.Text" xml:space="preserve"><value>最近打开的仓库</value></data>
+  <data name="RepoRecentEmpty.Text" xml:space="preserve"><value>暂无最近记录</value></data>
 </root>

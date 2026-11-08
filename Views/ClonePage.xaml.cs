@@ -314,6 +314,7 @@ public sealed partial class ClonePage : Page
             if (success)
             {
                 AppState.SetRepository(targetPath);
+                SettingsService.AddRecentRepo(targetPath);
                 AppLogger.OK(TAG, $"克隆成功: {targetPath}");
 
                 StatusText.Text = string.Format(App.Localizer.GetLocalizedString("CloneStatusSuccess"), targetPath);

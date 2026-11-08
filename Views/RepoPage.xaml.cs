@@ -26,6 +26,7 @@ public sealed partial class RepoPage : Page
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         CheckGitAvailability();
+        LoadRecentRepos();
 
         var saved = AppState.CurrentRepoPath;
         if (!string.IsNullOrEmpty(saved) && Directory.Exists(saved))
@@ -37,12 +38,10 @@ public sealed partial class RepoPage : Page
         UpdateCloneUI();
     }
 
-    // ========== 从克隆页返回时刷新 ==========
     protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
 
-        // 从 ClonePage 回来时，仓库可能刚被设置
         var saved = AppState.CurrentRepoPath;
         if (!string.IsNullOrEmpty(saved) && Directory.Exists(saved))
         {
@@ -51,15 +50,14 @@ public sealed partial class RepoPage : Page
             RepoNameDisplay.Visibility = Visibility.Visible;
         }
         UpdateCloneUI();
+        LoadRecentRepos(); // 从克隆页返回时刷新一下列表
     }
 
-    // ========== 跳转到克隆页 ==========
     private void OnNavigateToClone(object sender, RoutedEventArgs e)
     {
         Frame.Navigate(typeof(ClonePage));
     }
 
-    // ========== Git 检测 ==========
     private void CheckGitAvailability()
     {
         try
@@ -125,7 +123,6 @@ public sealed partial class RepoPage : Page
         }
     }
 
-    // ========== 浏览目录 ==========
     private void OnBrowseForInit(object sender, RoutedEventArgs e)
     {
         try
@@ -144,12 +141,44 @@ public sealed partial class RepoPage : Page
         }
     }
 
+    // ========== 加载并显示最近列表 ==========
+    private void LoadRecentRepos()
+    {
+        var settings = SettingsService.Load();
+        if (settings.RecentRepos != null && settings.RecentRepos.Count > 0)
+        {
+            RecentReposListView.ItemsSource = null; // 强制刷新
+            RecentReposListView.ItemsSource = settings.RecentRepos;
+            RecentReposPanel.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            RecentReposPanel.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    // ========== 点击最近列表 ==========
+    private void OnRecentRepoClick(object sender, ItemClickEventArgs e)
+    {
+        if (e.ClickedItem is string repoPath && Directory.Exists(repoPath))
+        {
+            AppState.SetRepository(repoPath);
+            SettingsService.AddRecentRepo(repoPath); // 重新置顶
+            
+            RepoActionsPanel.Visibility = Visibility.Collapsed;
+            RepoNameDisplay.Text = Path.GetFileName(repoPath);
+            RepoNameDisplay.Visibility = Visibility.Visible;
+            UpdateCloneUI();
+            
+            ShowInfoBar(Loc.GetString("CommonSuccess"), string.Format(Loc.GetString("RepoOpenSuccess"), Path.GetFileName(repoPath)), InfoBarSeverity.Success);
+        }
+    }
+
     // ========== 冲突提示对话框 ==========
     private async Task ShowConflictDialogAsync(string repoPath, List<string> conflicts)
     {
         var panel = new StackPanel { Spacing = 12 };
         
-        // 1. 说明文本
         panel.Children.Add(new TextBlock 
         { 
             Text = Loc.GetString("ConflictDesc"), 
@@ -157,7 +186,6 @@ public sealed partial class RepoPage : Page
             Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
         });
 
-        // 2. 冲突文件列表 (用带边框的 ListView 展示)
         var listView = new ListView
         {
             ItemsSource = conflicts,
@@ -170,7 +198,6 @@ public sealed partial class RepoPage : Page
         };
         panel.Children.Add(listView);
 
-        // 3. 构造对话框
         var dialog = new ContentDialog
         {
             Title = Loc.GetString("ConflictTitle"),
@@ -183,7 +210,6 @@ public sealed partial class RepoPage : Page
 
         var result = await dialog.ShowAsync();
 
-        // 4. 如果用户点击了“打开仓库目录”
         if (result == ContentDialogResult.Primary)
         {
             try

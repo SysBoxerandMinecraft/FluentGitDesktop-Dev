@@ -139,6 +139,7 @@ public sealed partial class RepoPage
             if (GitService.IsGitRepository(repoPath))
             {
                 AppState.SetRepository(repoPath);
+                SettingsService.AddRecentRepo(repoPath); // 【新增】记录到最近列表
                 RepoActionsPanel.Visibility = Visibility.Collapsed;
                 RepoNameDisplay.Text = Path.GetFileName(repoPath);
                 RepoNameDisplay.Visibility = Visibility.Visible;
@@ -187,17 +188,14 @@ public sealed partial class RepoPage
             }
             else
             {
-                // 失败时，检查是不是发生了冲突
                 var conflicts = await Task.Run(() => GitService.GetConflictedFiles(gitPath, repoPath));
 
                 if (conflicts.Count > 0)
                 {
-                    // 有冲突，弹对话框
                     await ShowConflictDialogAsync(repoPath, conflicts);
                 }
                 else
                 {
-                    // 普通失败，走 InfoBar
                     ShowInfoBar(Loc.GetString("CommonError"), result.Message, InfoBarSeverity.Error);
                 }
             }

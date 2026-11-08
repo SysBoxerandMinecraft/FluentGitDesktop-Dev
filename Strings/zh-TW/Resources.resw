@@ -227,4 +227,6 @@
   <data name="ConflictDesc" xml:space="preserve"><value>拉取或合併失敗，以下檔案存在衝突。請在編輯器中解決衝突並儲存，然後在此頁面點擊「全部暫存」並提交以完成合併。</value></data>
   <data name="ConflictOpenFolder" xml:space="preserve"><value>開啟儲存庫目錄</value></data>
   <data name="ConflictOK" xml:space="preserve"><value>我知道了</value></data>
+    <data name="RepoRecentTitle.Text" xml:space="preserve"><value>最近開啟的儲存庫</value></data>
+  <data name="RepoRecentEmpty.Text" xml:space="preserve"><value>暫無最近記錄</value></data>
 </root>

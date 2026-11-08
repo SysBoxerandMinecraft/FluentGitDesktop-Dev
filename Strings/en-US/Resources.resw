@@ -228,4 +228,6 @@
   <data name="ConflictDesc" xml:space="preserve"><value>Pull or merge failed. The following files have conflicts. Please resolve them in your editor, save, then click 'Stage All' and commit to complete the merge.</value></data>
   <data name="ConflictOpenFolder" xml:space="preserve"><value>Open Repository Folder</value></data>
   <data name="ConflictOK" xml:space="preserve"><value>Got it</value></data>
+    <data name="RepoRecentTitle.Text" xml:space="preserve"><value>Recent Repositories</value></data>
+  <data name="RepoRecentEmpty.Text" xml:space="preserve"><value>No recent repositories</value></data>
 </root>

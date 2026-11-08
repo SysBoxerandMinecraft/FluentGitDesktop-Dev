@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
+using System.Collections.Generic; // 新增
+using System.Linq; // 新增
 
 namespace FluentGit.Services;
 
@@ -13,13 +15,15 @@ public class AppSettings
     public bool FilterBuildArtifacts { get; set; } = true;
     public string? BackdropType { get; set; }
     public string? Language { get; set; } = "zh-CN"; 
+    
+    // 新增：最近打开的仓库列表
+    public List<string> RecentRepos { get; set; } = new();
 }
 
 public static class SettingsService
 {
     private const string TAG = "SettingsService";
 
-    // 修改这里：直接放在程序运行目录下的 Setting 文件夹
     private static readonly string _settingsPath = Path.Combine(
         AppContext.BaseDirectory, "Setting", "settings.json"
     );
@@ -50,6 +54,8 @@ public static class SettingsService
                 {
                     if (string.IsNullOrEmpty(settings.Language))
                         settings.Language = "zh-CN";
+                    // 清理已被用户删除的无效路径
+                    settings.RecentRepos = settings.RecentRepos.Where(Directory.Exists).ToList();
                     return settings;
                 }
             }
@@ -74,15 +80,31 @@ public static class SettingsService
                     Directory.CreateDirectory(dir);
 
                 File.WriteAllText(_settingsPath, json);
-                AppLogger.OK(TAG, $"设置已保存到 {_settingsPath}");
                 return; 
             }
             catch (Exception ex)
             {
-                AppLogger.Warning(TAG, $"尝试保存设置失败 (第 {i + 1} 次): {ex.Message}");
+                if (i == 2) AppLogger.Error(TAG, $"保存设置彻底失败: {ex.Message}");
                 Thread.Sleep(100); 
             }
         }
-        AppLogger.Error(TAG, "保存设置彻底失败，文件可能被锁定。");
+    }
+
+    // 新增：添加最近打开的仓库
+    public static void AddRecentRepo(string path)
+    {
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) return;
+        
+        var settings = Load();
+        // 如果已存在，先移除
+        settings.RecentRepos.RemoveAll(p => string.Equals(p, path, StringComparison.OrdinalIgnoreCase));
+        // 插到最前面
+        settings.RecentRepos.Insert(0, path);
+        
+        // 最多保留 8 个
+        if (settings.RecentRepos.Count > 8)
+            settings.RecentRepos = settings.RecentRepos.Take(8).ToList();
+            
+        Save(settings);
     }
 }
