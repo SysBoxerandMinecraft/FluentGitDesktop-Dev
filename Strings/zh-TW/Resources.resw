@@ -229,4 +229,10 @@
   <data name="ConflictOK" xml:space="preserve"><value>我知道了</value></data>
     <data name="RepoRecentTitle.Text" xml:space="preserve"><value>最近開啟的儲存庫</value></data>
   <data name="RepoRecentEmpty.Text" xml:space="preserve"><value>暫無最近記錄</value></data>
+    <data name="RepoStageFile" xml:space="preserve"><value>暫存</value></data>
+  <data name="RepoDiscardFile" xml:space="preserve"><value>放棄變更</value></data>
+  <data name="RepoDiscardConfirmTitle" xml:space="preserve"><value>確認放棄變更？</value></data>
+  <data name="RepoDiscardConfirmDesc" xml:space="preserve"><value>這將永久捨棄 {0} 中未暫存的修改，此操作無法復原。</value></data>
+  <data name="RepoDiscardBtnYes" xml:space="preserve"><value>放棄修改</value></data>
+  <data name="RepoDiscardBtnNo" xml:space="preserve"><value>取消</value></data>
 </root>

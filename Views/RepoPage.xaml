@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="using:FluentGit.Views"
+      xmlns:services="using:FluentGit.Services"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       NavigationCacheMode="Required">
@@ -71,7 +72,6 @@
                                 <Button x:Name="CloneRepoButton" x:Uid="RepoClone" Click="OnNavigateToClone" Style="{StaticResource PrimaryFormButtonStyle}" />
                             </StackPanel>
 
-                            <!-- 新增：最近打开的仓库列表 -->
                             <StackPanel x:Name="RecentReposPanel" Spacing="6" Margin="0,8,0,0" Visibility="Collapsed">
                                 <TextBlock x:Uid="RepoRecentTitle" FontSize="14" FontWeight="SemiBold" Foreground="Gray" />
                                 <ListView x:Name="RecentReposListView" MaxHeight="150" SelectionMode="None" IsItemClickEnabled="True" ItemClick="OnRecentRepoClick">
@@ -106,7 +106,39 @@
                     <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="16">
                         <StackPanel Spacing="16">
                             <TextBlock x:Uid="RepoCommitTitle" FontSize="20" FontWeight="SemiBold"/>
+                            
                             <TextBlock x:Name="ChangeStatusText" Style="{StaticResource CaptionTextStyle}" />
+                            
+                            <!-- 文件列表 UI -->
+                            <ListView x:Name="StatusListView" MaxHeight="220" SelectionMode="None" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListView.ItemTemplate>
+                                    <!-- 修改这里：使用 services:GitStatusEntry -->
+                                    <DataTemplate x:DataType="services:GitStatusEntry">
+                                        <Grid ColumnSpacing="10" Padding="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <!-- 状态标签 -->
+                                            <Border Grid.Column="0" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="6,2" VerticalAlignment="Center">
+                                                <TextBlock Text="{x:Bind StatusText}" FontSize="11" Foreground="Gray" />
+                                            </Border>
+                                            
+                                            <!-- 文件路径 -->
+                                            <TextBlock Grid.Column="1" Text="{x:Bind Path}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                            
+                                            <!-- 操作按钮 -->
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                                                <Button Content="+" Padding="10,2" FontSize="14" ToolTipService.ToolTip="Stage" Click="OnStageSingleFileClick" Tag="{x:Bind Path}" Style="{StaticResource FormButtonStyle}" MinWidth="32" MinHeight="28" />
+                                                <Button Content="↺" Padding="10,2" FontSize="14" ToolTipService.ToolTip="Discard" Click="OnDiscardSingleFileClick" Tag="{x:Bind Path}" Style="{StaticResource FormButtonStyle}" MinWidth="32" MinHeight="28" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
                             <TextBox x:Name="CommitMessageTextBox" x:Uid="RepoCommitPlaceholder" Style="{StaticResource FormTextBoxStyle}" AcceptsReturn="False" />
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Button x:Name="AddAllButton" x:Uid="RepoAddAll" Click="OnAddAll" Style="{StaticResource FormButtonStyle}" />

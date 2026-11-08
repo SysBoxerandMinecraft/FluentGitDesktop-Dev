@@ -230,4 +230,10 @@
   <data name="ConflictOK" xml:space="preserve"><value>Got it</value></data>
     <data name="RepoRecentTitle.Text" xml:space="preserve"><value>Recent Repositories</value></data>
   <data name="RepoRecentEmpty.Text" xml:space="preserve"><value>No recent repositories</value></data>
+    <data name="RepoStageFile" xml:space="preserve"><value>Stage</value></data>
+  <data name="RepoDiscardFile" xml:space="preserve"><value>Discard</value></data>
+  <data name="RepoDiscardConfirmTitle" xml:space="preserve"><value>Discard Changes?</value></data>
+  <data name="RepoDiscardConfirmDesc" xml:space="preserve"><value>This will permanently discard unstaged changes in {0}. This action cannot be undone.</value></data>
+  <data name="RepoDiscardBtnYes" xml:space="preserve"><value>Discard</value></data>
+  <data name="RepoDiscardBtnNo" xml:space="preserve"><value>Cancel</value></data>
 </root>

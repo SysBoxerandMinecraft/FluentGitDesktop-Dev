@@ -27,7 +27,6 @@ public sealed partial class RepoPage : Page
     {
         CheckGitAvailability();
         LoadRecentRepos();
-
         var saved = AppState.CurrentRepoPath;
         if (!string.IsNullOrEmpty(saved) && Directory.Exists(saved))
         {
@@ -41,7 +40,6 @@ public sealed partial class RepoPage : Page
     protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-
         var saved = AppState.CurrentRepoPath;
         if (!string.IsNullOrEmpty(saved) && Directory.Exists(saved))
         {
@@ -50,13 +48,10 @@ public sealed partial class RepoPage : Page
             RepoNameDisplay.Visibility = Visibility.Visible;
         }
         UpdateCloneUI();
-        LoadRecentRepos(); // 从克隆页返回时刷新一下列表
+        LoadRecentRepos();
     }
 
-    private void OnNavigateToClone(object sender, RoutedEventArgs e)
-    {
-        Frame.Navigate(typeof(ClonePage));
-    }
+    private void OnNavigateToClone(object sender, RoutedEventArgs e) => Frame.Navigate(typeof(ClonePage));
 
     private void CheckGitAvailability()
     {
@@ -64,7 +59,6 @@ public sealed partial class RepoPage : Page
         {
             var settings = SettingsService.Load();
             string? gitPath = settings.GitPath;
-
             if (string.IsNullOrEmpty(gitPath))
             {
                 gitPath = GitPathHelper.FindGitPath();
@@ -72,12 +66,8 @@ public sealed partial class RepoPage : Page
                 {
                     settings.GitPath = gitPath;
                     SettingsService.Save(settings);
-                    AppLogger.OK(TAG, $"自动找到 Git: {gitPath}");
                 }
-                else
-                {
-                    gitPath = null;
-                }
+                else gitPath = null;
             }
 
             bool gitFound = false;
@@ -94,18 +84,13 @@ public sealed partial class RepoPage : Page
                     process.Start();
                     string output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();
-                    if (process.ExitCode == 0 && output.Contains("git version"))
-                        gitFound = true;
+                    if (process.ExitCode == 0 && output.Contains("git version")) gitFound = true;
                 }
-                catch (Exception ex)
-                {
-                    AppLogger.Error(TAG, $"git --version 异常: {ex.Message}");
-                }
+                catch { }
             }
 
             if (!gitFound)
             {
-                AppLogger.Warning(TAG, "未找到 Git");
                 GitWarningPanel.Visibility = Visibility.Visible;
                 RepoActionsPanel.Visibility = Visibility.Collapsed;
                 RepoOpsPanel.Visibility = Visibility.Collapsed;
@@ -117,10 +102,7 @@ public sealed partial class RepoPage : Page
                 RepoActionsPanel.Visibility = Visibility.Visible;
             }
         }
-        catch (Exception ex)
-        {
-            AppLogger.Error(TAG, $"CheckGitAvailability 异常: {ex.Message}");
-        }
+        catch (Exception ex) { AppLogger.Error(TAG, $"CheckGitAvailability 异常: {ex.Message}"); }
     }
 
     private void OnBrowseForInit(object sender, RoutedEventArgs e)
@@ -135,67 +117,40 @@ public sealed partial class RepoPage : Page
             var folder = folderPicker.PickSingleFolderAsync().GetAwaiter().GetResult();
             if (folder != null) RepoPathTextBox.Text = folder.Path;
         }
-        catch (Exception ex)
-        {
-            AppLogger.Error(TAG, $"浏览目录异常: {ex.Message}");
-        }
+        catch { }
     }
 
-    // ========== 加载并显示最近列表 ==========
     private void LoadRecentRepos()
     {
         var settings = SettingsService.Load();
         if (settings.RecentRepos != null && settings.RecentRepos.Count > 0)
         {
-            RecentReposListView.ItemsSource = null; // 强制刷新
+            RecentReposListView.ItemsSource = null;
             RecentReposListView.ItemsSource = settings.RecentRepos;
             RecentReposPanel.Visibility = Visibility.Visible;
         }
-        else
-        {
-            RecentReposPanel.Visibility = Visibility.Collapsed;
-        }
+        else RecentReposPanel.Visibility = Visibility.Collapsed;
     }
 
-    // ========== 点击最近列表 ==========
     private void OnRecentRepoClick(object sender, ItemClickEventArgs e)
     {
         if (e.ClickedItem is string repoPath && Directory.Exists(repoPath))
         {
             AppState.SetRepository(repoPath);
-            SettingsService.AddRecentRepo(repoPath); // 重新置顶
-            
+            SettingsService.AddRecentRepo(repoPath);
             RepoActionsPanel.Visibility = Visibility.Collapsed;
             RepoNameDisplay.Text = Path.GetFileName(repoPath);
             RepoNameDisplay.Visibility = Visibility.Visible;
             UpdateCloneUI();
-            
             ShowInfoBar(Loc.GetString("CommonSuccess"), string.Format(Loc.GetString("RepoOpenSuccess"), Path.GetFileName(repoPath)), InfoBarSeverity.Success);
         }
     }
 
-    // ========== 冲突提示对话框 ==========
     private async Task ShowConflictDialogAsync(string repoPath, List<string> conflicts)
     {
         var panel = new StackPanel { Spacing = 12 };
-        
-        panel.Children.Add(new TextBlock 
-        { 
-            Text = Loc.GetString("ConflictDesc"), 
-            TextWrapping = TextWrapping.Wrap,
-            Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"]
-        });
-
-        var listView = new ListView
-        {
-            ItemsSource = conflicts,
-            MaxHeight = 200,
-            SelectionMode = ListViewSelectionMode.None,
-            BorderThickness = new Thickness(1),
-            BorderBrush = (Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"],
-            CornerRadius = new CornerRadius(4),
-            Padding = new Thickness(4)
-        };
+        panel.Children.Add(new TextBlock { Text = Loc.GetString("ConflictDesc"), TextWrapping = TextWrapping.Wrap, Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
+        var listView = new ListView { ItemsSource = conflicts, MaxHeight = 200, SelectionMode = ListViewSelectionMode.None, BorderThickness = new Thickness(1), BorderBrush = (Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"], CornerRadius = new CornerRadius(4), Padding = new Thickness(4) };
         panel.Children.Add(listView);
 
         var dialog = new ContentDialog
@@ -208,23 +163,10 @@ public sealed partial class RepoPage : Page
             XamlRoot = this.XamlRoot
         };
 
-        var result = await dialog.ShowAsync();
-
-        if (result == ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = "explorer.exe",
-                    Arguments = $"\"{repoPath}\"",
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                AppLogger.Error(TAG, $"打开文件夹失败: {ex.Message}");
-            }
+            try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = "explorer.exe", Arguments = $"\"{repoPath}\"", UseShellExecute = true }); }
+            catch { }
         }
     }
 }
